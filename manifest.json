@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "ChatGPT Character Theme",
+    "version": "0.1.0",
+    "description": "Adds selectable character themes to the ChatGPT conversation UI.",
+    "content_scripts": [
+        {
+            "matches": ["https://chatgpt.com/*"],
+            "js": ["src/content.js"]
+        }
+    ]
+}

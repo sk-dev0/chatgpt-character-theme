@@ -12,8 +12,11 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["assets/koharu_normal.png"],
+            "resources": ["assets/koharu_normal.png", "assets/hiyori_normal.png"],
             "matches": ["https://chatgpt.com/*"]
         }
+    ],
+    "permissions": [
+        "storage"
     ]
 }

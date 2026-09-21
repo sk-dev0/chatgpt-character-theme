@@ -16,9 +16,12 @@ Chromeに拡張機能の構成を伝える設定ファイル
     ],
     "web_accessible_resources": [
         {
-            "resources": ["assets/koharu_normal.png"],
+            "resources": ["assets/koharu_normal.png", "assets/hiyori_normal.png"],
             "matches": ["https://chatgpt.com/*"]
         }
+    ],
+    "permissions": [
+        "storage"
     ]
 }
 ```

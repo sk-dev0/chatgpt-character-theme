@@ -1,6 +1,6 @@
-.koharu-avatar {
+.character-avatar {
     position: absolute;
-    left: -100px;
+    left: -120px;
     top: 0;
     width: 100px;
     height: auto;
@@ -8,7 +8,7 @@
 
 /* 画面が狭い場合 */
 @media (max-width: 900px) {
-    .koharu-avatar {
+    .character-avatar {
         position: relative;
         left: 0;
         top: 0;
@@ -19,11 +19,21 @@
     }
 }
 
+/* 吹き出し共通 */
 .character-message {
-    background: #f5f8ff;
     border: 1px solid #dce5f5;
     border-radius: 16px;
     padding: 16px 20px;
+}
+
+/* 小春ちゃん */
+.character-koharu {
+    background: #c9d9ff;
+}
+
+/* ひよりちゃん */
+.character-hiyori {
+    background: #ffd8e4;
 }
 
 /* 吹き出しの三角部分 */
@@ -40,4 +50,36 @@
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     border-right: 10px solid #dce5f5;
+}
+
+.character-selector {
+    display: flex;
+    width: 100%;
+    margin-top: 6px;
+    gap: 6px;
+}
+
+.character-selector button {
+    flex: 1;
+    padding: 7px 12px;
+
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background: #f7f7f7;
+
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+/* マウスを乗せたとき */
+.character-selector button:hover {
+    background: #eeeeee;
+    border-color: #bdbdbd;
+}
+
+/* 選択中 */
+.character-selector button.selected {
+    background: #e3e3e3;
+    border-color: #999;
+    font-weight: 600;
 }

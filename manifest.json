@@ -6,7 +6,14 @@
     "content_scripts": [
         {
             "matches": ["https://chatgpt.com/*"],
-            "js": ["src/content.js"]
+            "js": ["src/content.js"],
+            "css": ["src/styles.css"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["assets/koharu_normal.png"],
+            "matches": ["https://chatgpt.com/*"]
         }
     ]
 }

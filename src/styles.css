@@ -1,0 +1,43 @@
+.koharu-avatar {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 100px;
+    height: auto;
+}
+
+/* 画面が狭い場合 */
+@media (max-width: 900px) {
+    .koharu-avatar {
+        position: relative;
+        left: 0;
+        top: 0;
+
+        display: block;
+        margin-right: auto;
+        margin-bottom: 8px;
+    }
+}
+
+.character-message {
+    background: #f5f8ff;
+    border: 1px solid #dce5f5;
+    border-radius: 16px;
+    padding: 16px 20px;
+}
+
+/* 吹き出しの三角部分 */
+.character-message::before {
+    content: "";
+    position: absolute;
+
+    left: -10px;
+    top: 24px;
+
+    width: 0;
+    height: 0;
+
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 10px solid #dce5f5;
+}

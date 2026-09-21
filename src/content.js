@@ -19,33 +19,50 @@ const observer = new MutationObserver((mutations) => {
                 return;
             }
 
-            // 追加された要素自身、またはその内部からassistantを探す
-            let assistantMessage = null;
+            // 追加されたnodeの中からassistantをすべて取得する
+            let assistantMessages = [];
 
             // 検知したいノードかどうかを判定
             if (node.matches(assistantSelector)) {
-                // node自身がすでに探していたassistant要素だから
-                assistantMessage = node;
-            } else {
-                // nodeが <div data-message-author-role="assistant"> を含むようなdiv要素だった場合
-                // nodeの中のassistantを探しに行く
-                assistantMessage = node.querySelector(assistantSelector);
+                assistantMessages.push(node);
             }
 
-            // assistantが見つからなければ終了
-            if (!assistantMessage) {
-                return;
-            }
+            // node内部にあるassistantもすべて取得する
+            // node.querySelectorAll()がnodeの子孫にあるassistantをすべて探す
+            assistantMessages.push(
+                ...node.querySelectorAll(assistantSelector)
+            );
 
-            // getAttribute() は、HTML要素についている属性の値を取得するメソッド
-            const messageId = assistantMessage.getAttribute("data-message-id");
+            // 見つかったassistantを1件ずつ処理
+            assistantMessages.forEach((assistantMessage) => {
+                // getAttribute() は、HTML要素についている属性の値を取得するメソッド
+                const messageId = assistantMessage.getAttribute("data-message-id");
 
-            // 仮のassistant要素は無視する
-            if (messageId?.startsWith("request-placeholder-")) {
-                return;
-            }
+                // 仮のassistant要素は無視する
+                if (messageId?.startsWith("request-placeholder-")) {
+                    return;
+                }
 
-            console.log("新しいassistantを検出:", messageId);
+                // すでに画像が追加されている場合は何もしない
+                if (assistantMessage.querySelector(".koharu-avatar")) {
+                    return;
+                }
+
+                // assistantの回答を吹き出し表示するためのクラス
+                assistantMessage.classList.add("character-message");
+
+                // 画像を作成
+                const koharuImage = document.createElement("img");
+
+                // 拡張機能内部にある画像のURLをChromeに作ってもらう
+                koharuImage.src = chrome.runtime.getURL("assets/koharu_normal.png");
+                koharuImage.classList.add("koharu-avatar");
+
+                // prepend()とは指定した要素の中の先頭に要素を追加するメソッド
+                assistantMessage.prepend(koharuImage);
+
+                console.log("新しいassistantを検出:", messageId);
+            })
         })
     })
 })

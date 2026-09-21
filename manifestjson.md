@@ -10,7 +10,14 @@ Chromeに拡張機能の構成を伝える設定ファイル
     "content_scripts": [
         {
             "matches": ["https://chatgpt.com/*"],
-            "js": ["src/content.js"]
+            "js": ["src/content.js"],
+            "css": ["src/styles.css"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["assets/koharu_normal.png"],
+            "matches": ["https://chatgpt.com/*"]
         }
     ]
 }
@@ -54,3 +61,15 @@ content scriptとは指定したWebページ上でChrome拡張から実行する
 今回であれば、Chrome拡張がchatgpt.comを開くとcontent.jsを実行し、chatGPTのDOMを調べたり変更したりする
 
 `matches`はcontent scriptをどのURLで動かすかの指定であり、`js`は対象ページで実際に読み込ませるJavaScriptファイルを指定する。
+
+---
+
+```json
+"web_accessible_resources": [
+  {
+    "resources": ["assets/koharu_normal.png"],
+    "matches": ["https://chatgpt.com/*"]
+  }
+]
+```
+web_accessible_resourcesは拡張機能内のファイルをWebページ上で使えるように許可する設定である。`resources`にあるファイルを`matches`に記載したWebページ上で使えるようにする

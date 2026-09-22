@@ -12,7 +12,20 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["assets/koharu_normal.png", "assets/hiyori_normal.png"],
+            "resources": [
+                "assets/koharu_normal.png", 
+                "assets/koharu_happy.png", 
+                "assets/koharu_sad.png", 
+                "assets/koharu_panic.png", 
+                "assets/koharu_thinking.png", 
+                "assets/koharu_surprised.png", 
+                "assets/hiyori_normal.png",
+                "assets/hiyori_happy.png",
+                "assets/hiyori_sad.png",
+                "assets/hiyori_panic.png",
+                "assets/hiyori_thinking.png",
+                "assets/hiyori_surprised.png"
+            ],
             "matches": ["https://chatgpt.com/*"]
         }
     ],

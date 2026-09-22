@@ -158,7 +158,7 @@ async function getMessageCharacter(messageId) {
 // ==================================================
 
 
-function displayCharacter(assistantMessage, messageCharacter) {
+function displayCharacter(assistantMessage, messageCharacter, expression) {
     // NormalならChatGPT本来の表示のまま
     if (messageCharacter === "normal") {
         return;
@@ -171,7 +171,7 @@ function displayCharacter(assistantMessage, messageCharacter) {
     const characterImage = document.createElement("img");
 
     // 拡張機能内部にある画像のURLをChromeに作ってもらう
-    characterImage.src = chrome.runtime.getURL(`assets/${messageCharacter}_normal.png`);
+    characterImage.src = chrome.runtime.getURL(`assets/${messageCharacter}_${expression}.png`);
     characterImage.classList.add("character-avatar");
 
     // prepend()とは指定した要素の中の先頭に要素を追加するメソッド
@@ -201,10 +201,62 @@ async function processAssistantMessage(assistantMessage) {
     // この回答を処理済みにする
     assistantMessage.classList.add("character-processed");
 
-    console.log("新しいassistantを検出:", messageId);
+    // この回答に割り当てられたキャラクターを取得
+    const messageCharacter = await getMessageCharacter(messageId);
+
+    // 回答末尾のタグから表情を取得
+    const expression = getExpression(assistantMessage);
+
+    // キャラクターを表示
+    displayCharacter(
+        assistantMessage,
+        messageCharacter,
+        expression
+    );
+
+    console.log(
+        "新しいassistantを検出:",
+        messageId,
+        messageCharacter,
+        expression
+    );
 }
 
 
+
+// ==================================================
+// assistantの回答に表情タグがあれば画像を切り替える
+// ==================================================
+
+function updateExpression(assistantMessage) {
+    const characterImage = assistantMessage.querySelector(".character-avatar");
+
+    // キャラクター画像がなければ何もしない
+    if (!characterImage) {
+        return;
+    }
+
+    const expression = getExpression(assistantMessage);
+
+    // この回答に割り当てられているキャラクターを取得
+    const characterClass = [...assistantMessage.classList]
+        .find(className =>
+            className === "character-koharu" ||
+            className === "character-hiyori"
+        );
+
+    if (!characterClass) {
+        return;
+    }
+
+    const messageCharacter = characterClass.replace("character-", "");
+
+    characterImage.src = chrome.runtime.getURL(
+        `assets/${messageCharacter}_${expression}.png`
+    );
+
+    hideExpressionTag(assistantMessage);
+}
 
 // ==================================================
 // DOMに新しく追加された要素を監視する
@@ -227,9 +279,59 @@ const observer = new MutationObserver((mutations) => {
                 processAssistantMessage(assistantMessage);
             })
         })
+
+        // 今回変更された場所がassistant回答の中か確認
+        const targetElement = mutation.target.nodeType === Node.ELEMENT_NODE
+            ? mutation.target
+            : mutation.target.parentElement;
+
+        const assistantMessage = targetElement?.closest(assistantSelector);
+
+        if (assistantMessage) {
+            updateExpression(assistantMessage)
+        }
     })
 })
 
+
+
+// ==================================================
+// 解答から感情差分を取り出す
+// ==================================================
+
+function getExpression(assistantMessage) {
+    const text = assistantMessage.textContent;
+
+    const match = text.match(
+        /\[expression:(normal|happy|sad|thinking|surprised|panic)\]/
+    );
+
+    // 表情タグが見つからなければnormal
+    if (!match) {
+        return "normal";
+    }
+
+    return match[1];
+}
+
+
+
+// ==================================================
+// 解答から感情差分の情報を見えなくする
+// ==================================================
+function hideExpressionTag(assistantMessage) {
+    const paragraphs = assistantMessage.querySelectorAll("p");
+
+    paragraphs.forEach((paragraph) => {
+        const text = paragraph.textContent.trim();
+
+        const isExpressionTag = /^\[expression:(normal|happy|sad|thinking|surprised|panic)\]$/.test(text);
+
+        if (isExpressionTag) {
+            paragraph.style.display = "none";
+        }
+    })
+}
 
 
 // ========================================
@@ -243,7 +345,8 @@ async function initialize() {
     // 読み込みが終わったらDOM監視を開始
     observer.observe(document.body, {
         childList: true,
-        subtree: true
+        subtree: true,
+        characterData: true
     })
 }
 

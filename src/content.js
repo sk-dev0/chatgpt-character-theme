@@ -6,7 +6,7 @@
 let currentCharacter = "koharu";
 
 // assistantの回答を識別するためのセレクタ
-const assistantSelector = '[data-message-author-role="assistant"]';
+const assistantSelector = '[data-content-search-unit-key*=":assistant"]';
 
 
 

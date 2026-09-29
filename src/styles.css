@@ -21,6 +21,7 @@
 
 /* 吹き出し共通 */
 .character-message {
+    position: relative;
     border: 1px solid #dce5f5;
     border-radius: 16px;
     padding: 16px 20px;
